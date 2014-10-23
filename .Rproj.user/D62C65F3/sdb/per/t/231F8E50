@@ -1,0 +1,17 @@
+{
+    "contents" : "---\ntitle: \"hw6 S110\"\nauthor: \"Callin Switzer\"\ndate: \"October 15, 2014\"\noutput: pdf_document\n---\n                  *collaborators: \"Eric Fredrickson, Zach Mabel, Savannah Bergquist\"*\n\n# 1\n\nOn a randomly chosen day (see histogram below): \n* the mean will be close to zero, because most days are not rainy.  However, the mean can be affected by outliers-- so if there are some days that had a downpour, that will move the mean higher.\n* the median will also be zero, because over half of the days had zero rainfall\n* the mode will be zero\n\n```{r, echo = F, message = F, fig.height = 2.5}\nrequire(ggplot2)\n\n\nhistNormKern <- function(diffs = diffs, title = \"Distribution\"){\n     colnames(diffs) <- \"diffs\"\n     ggplot(diffs, aes(x = diffs)) + \n     geom_histogram(aes(y = ..density.., fill = \"Histogram\"), color = \"white\", \n                     alpha = 0.2)+\n     # density line\n     geom_line(aes(y = ..density..,  lty = \"Density\"), stat = 'density')+\n     #geom_line(aes(y = ..density..,  lty = \"Normal\"), stat = 'normal')+\n     # normal approx\n     stat_function(aes(lty = \"Normal\"), fun=dnorm, \n                   args=list(mean=mean(diffs$diffs), sd=sd(diffs$diffs)))+\n     \n     labs(x = \"Value\", title = title) + \n     theme_bw() + \n     theme(legend.background = element_rect(colour = \"black\"),\n          plot.background = element_blank()\n          ,panel.grid.major = element_blank()\n          ,panel.grid.minor = element_blank()\n          ,panel.border = element_blank()\n          ,axis.line = element_line(color = 'black')) + \n     # Names for the legend\n     scale_linetype(name = \"Line\")+\n     scale_fill_manual(name = \"Histogram\", values = c(\"black\")) \n}\n\nMode <- function(x) {\n  ux <- unique(x)\n  ux[which.max(tabulate(match(x, ux)))]\n}\n\ndiffs = c(rexp(100, 10), rep(0, 200))\n\nhistNormKern(data.frame(diffs)) + xlab(\"Rainfall\")\n\nmmm <- function(diffs) {\n     print(paste(\"Mean:\", mean(diffs), \"     Median:\", median(diffs), \"      Mode:\", Mode(diffs)))\n     #print(paste(\"Median:\", median(diffs)))\n     #print(paste(\"Mode:\", Mode(diffs)))\n     \n}\n\nmmm(diffs)\n\n```\n\nIf we limit our sample to rainy days (see histogram below): \n* the mean will be higher than the mean for randomly chosen days, because we're getting rid of a bunch of zeros.\n* the median will also be higher than the median of randomly chosen days, and it will no longer be zero\n* the mode will no longer be zero, because we've removed all the zeros from our sample.  The mode could be quite high, if most rainy days were \"monsoon\" storms.  The mode could be quite low, if most of the rainy days were just small sprinkles.\n\n```{r, echo = F, message = F, fig.height = 2.5}\ndiffs <- diffs[diffs != 0 ]\n\nhistNormKern(data.frame(diffs))+ xlab(\"Rainfall on rainy days\")\nmmm(diffs)\n```\n\n\n",
+    "created" : 1413350243760.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "112648238",
+    "id" : "231F8E50",
+    "lastKnownWriteTime" : 1413407651,
+    "path" : "~/Documents/S110/hw6S110.rmd",
+    "project_path" : "hw6S110.rmd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_markdown"
+}
